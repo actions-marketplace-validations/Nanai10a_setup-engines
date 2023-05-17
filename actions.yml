@@ -1,0 +1,28 @@
+name: setup-engines
+description: setup engines in package.json automatically
+
+runs:
+  using: "composite"
+  steps:
+    - id: json
+      run: echo "txt=$(cat package.json)" >> $GITHUB_OUTPUT
+
+    - id: engines
+      run: |
+        echo "node=${{ fromJSON(steps.json.outputs.txt).engines.node }}" >> $GITHUB_OUTPUT
+        echo "yarn=${{ fromJSON(steps.json.outputs.txt).engines.yarn }}" >> $GITHUB_OUTPUT
+        echo "pnpm=${{ fromJSON(steps.json.outputs.txt).engines.pnpm }}" >> $GITHUB_OUTPUT
+
+    - name: setup node
+      uses: actions/setup-node@v3
+      if: steps.engines.outputs.node != ''
+      with:
+        node-version: ${{ steps.engines.outputs.node }}
+
+    - name: setup yarn
+      run: corepack prepare ${{ steps.engines.outputs.yarn }} --activate
+      if: steps.engines.outputs.yarn != ''
+
+    - name: setup pnpm
+      run: corepack prepare ${{ steps.engines.outputs.pnpm }} --activate
+      if: steps.engines.outputs.pnpm != ''
