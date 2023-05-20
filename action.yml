@@ -14,15 +14,15 @@ runs:
         echo "pnpm=${{ fromJSON(steps.json.outputs.txt).pnpm }}" >> $GITHUB_OUTPUT
 
     - name: setup node
-      uses: actions/setup-node@v3
       if: steps.engines.outputs.node != ''
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ steps.engines.outputs.node }}
 
     - name: setup yarn
-      run: corepack prepare ${{ steps.engines.outputs.yarn }} --activate
       if: steps.engines.outputs.yarn != ''
+      run: corepack prepare ${{ steps.engines.outputs.yarn }} --activate
 
     - name: setup pnpm
-      run: corepack prepare ${{ steps.engines.outputs.pnpm }} --activate
       if: steps.engines.outputs.pnpm != ''
+      run: corepack prepare ${{ steps.engines.outputs.pnpm }} --activate
