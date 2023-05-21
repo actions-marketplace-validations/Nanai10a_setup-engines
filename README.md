@@ -1,4 +1,4 @@
-# setup-engines (v1)
+# setup-engines (v0)
 
 setup "engines" of `package.json` for node
 
